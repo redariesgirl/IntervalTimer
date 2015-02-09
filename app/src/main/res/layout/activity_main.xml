@@ -34,7 +34,9 @@
             android:inputType="number"
             android:ems="2"
             android:id="@+id/exerciseTimePicker1"
- />
+            android:editable="false"
+            android:text="0"
+            android:gravity="center_horizontal" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +49,9 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="2"
-            android:id="@+id/exerciseTimePicker2" />
+            android:id="@+id/exerciseTimePicker2"
+            android:text="03"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -77,7 +81,8 @@
             android:id="@+id/restTimePicker1"
             android:ems="2"
 
-            />
+            android:gravity="center_horizontal"
+            android:text="0" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,12 +90,15 @@
             android:text=":"
              />
 
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="2"
-            android:id="@+id/restTimePicker2" />
+            android:id="@+id/restTimePicker2"
+            android:text="03"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 
@@ -109,10 +117,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/setPicker"
+        android:inputType="number"
         android:layout_below="@id/setView"
         android:ems="2"
         android:layout_alignLeft="@id/exerciseTimeView"
-        />
+        android:text="2"
+        android:gravity="center_horizontal" />
 
 
     <RadioGroup
@@ -129,21 +139,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Alarm"
-            android:id="@+id/radioButton"
+            android:id="@+id/alarmButton"
             android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Vibrate"
-            android:id="@+id/radioButton2"
+            android:id="@+id/vibrateButton"
             android:checked="true" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Both"
-            android:id="@+id/radioButton3"
+            android:id="@+id/bothButton"
 
             android:checked="false" />
     </RadioGroup>
