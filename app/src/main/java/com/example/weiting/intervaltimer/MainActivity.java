@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
@@ -22,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
     private EditText restTimePicker2;
     private EditText setPicker;
     private RadioGroup notifyRadioGroup;
+    private CheckBox screenOnCB;
    //private Button alarmButton;
     //private Button vibrateButton;
     //private Button bothButton;
@@ -46,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
                 startCounting();
             }
         });
+        screenOnCB = (CheckBox)findViewById(R.id.screenOnCB);
 
 
     }
@@ -77,7 +80,8 @@ public class MainActivity extends ActionBarActivity {
         i.putExtra("Exercise time",exerciseTimePicker1.getText().toString()+":"+exerciseTimePicker2.getText().toString());
         i.putExtra("Rest time",restTimePicker1.getText().toString()+":"+restTimePicker2.getText().toString());
         i.putExtra("Set", setPicker.getText().toString());
-        i.putExtra("notify", String.valueOf(notifyRadioGroup.getCheckedRadioButtonId()));
+        i.putExtra("Notify", String.valueOf(notifyRadioGroup.getCheckedRadioButtonId()));
+        i.putExtra("ScreenOn", String.valueOf(screenOnCB.isChecked()));
         //Log.e(TAG, i.getStringExtra("notify"));
         startActivity(i);
     }
