@@ -39,6 +39,8 @@ public class counting extends Activity{
     //private int seconds;
     private int set;
     private int totalSet;
+    private Button pauseButton;
+
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -46,6 +48,7 @@ public class counting extends Activity{
             if (mode == REST && set == -1){
                 handler.removeCallbacks(runnable);
                 showFinishMessage();
+                reset();
             }
 
             else handler.postDelayed(this, 1000);
@@ -54,10 +57,10 @@ public class counting extends Activity{
     };
 
     protected void onCreate(Bundle savedInstanceState) {
-        final Button pauseButton;
-        Button stopButton;
+
         String[] temp;
         Boolean screenOn;
+        Button stopButton;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.counting_basic);
@@ -180,7 +183,7 @@ public class counting extends Activity{
                     //handler.removeCallbacks(runnable);
                     //long buzz or alarm
                     buzzOrAlarm(notifyMode, Boolean.TRUE);
-                    reset();
+
 
                 }
                 else{
@@ -272,5 +275,6 @@ public class counting extends Activity{
         setRemaining.setText(String.valueOf((totalSet)));
         set = totalSet - 1;
         length = exerciseTimeInSec;
+        pauseButton.setText("Start");
     }
 }
