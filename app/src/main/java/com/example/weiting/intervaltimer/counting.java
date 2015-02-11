@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -40,6 +42,8 @@ public class counting extends Activity{
     private int set;
     private int totalSet;
     private Button pauseButton;
+    private SoundPool sp;
+    private int soundID;
 
     private final Runnable runnable = new Runnable() {
         @Override
@@ -50,9 +54,7 @@ public class counting extends Activity{
                 showFinishMessage();
                 reset();
             }
-
             else handler.postDelayed(this, 1000);
-            Log.e(TAG, "runnable");
         }
     };
 
@@ -61,14 +63,19 @@ public class counting extends Activity{
         String[] temp;
         Boolean screenOn;
         Button stopButton;
+        AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.counting_basic);
+
         exerciseTime = (TextView)findViewById(R.id.exerciseTime);
         restTime = (TextView)findViewById(R.id.restTime);
         setRemaining = (TextView) findViewById(R.id.setRemaining);
         pauseButton = (Button)findViewById(R.id.pauseButton);
         stopButton = (Button)findViewById(R.id.stopButton);
+
+        sp = new SoundPool(1,AudioManager.STREAM_MUSIC, 0 );
+        soundID = sp.load(this, R.raw.beep,1);
 
         Intent i = getIntent();
         if (i != null) {
@@ -150,7 +157,7 @@ public class counting extends Activity{
 
 
         mode = EXERCISE;
-        handler.postDelayed(runnable,1000);
+        handler.postDelayed(runnable,0);
     }
     protected void onStop(){
         super.onStop();
@@ -165,7 +172,7 @@ public class counting extends Activity{
         }
         else v = restTime;
 
-        Log.e("countDown", String.valueOf(length));
+        //Log.e("countDown", String.valueOf(length));
         int minutes = length/60;
         int seconds = length % 60;
         //parse into xx:xx String and update text
@@ -255,7 +262,20 @@ public class counting extends Activity{
         else vibrator.vibrate(time * 1000);
     }
     void alarm(Boolean isLong){
-        //TODO get alarm work
+        int streamID;
+
+        if (isLong) {
+            //repeat 3 times
+            streamID = sp.play(soundID, 1, 1, 1, 2, 1);
+            Log.e(TAG, "Alarm long "+ streamID+ " " + isLong);
+        }
+        else{
+            streamID = sp.play(soundID, 1.0F, 1.0F, 0, 0, 1.0F);
+            Log.e(TAG, "Alarm short" + streamID + " "+ isLong);
+        }
+
+
+
     }
 
     void showFinishMessage(){
@@ -276,5 +296,11 @@ public class counting extends Activity{
         set = totalSet - 1;
         length = exerciseTimeInSec;
         pauseButton.setText("Start");
+        pause = Boolean.TRUE;
     }
+
+    void changeColor(){
+
+    }
+    //TODO change text size and color when current activity is about to end
 }
