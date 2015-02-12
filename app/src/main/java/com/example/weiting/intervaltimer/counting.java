@@ -2,6 +2,8 @@ package com.example.weiting.intervaltimer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import android.os.Handler;
@@ -20,7 +23,7 @@ import android.os.Handler;
 /**
  * Created by weiting on 2015/2/9.
  */
-public class counting extends Activity{
+public class Counting extends Activity{
     static private final String TAG = "Counting";
     private int mode;
     private final int EXERCISE = 0;
@@ -44,6 +47,7 @@ public class counting extends Activity{
     private Button pauseButton;
     private SoundPool sp;
     private int soundID;
+    private FragmentManager mFragmentManager;
 
     private final Runnable runnable = new Runnable() {
         @Override
@@ -60,10 +64,15 @@ public class counting extends Activity{
 
     protected void onCreate(Bundle savedInstanceState) {
 
+        int COUNT_ONLY = 1;
+        int WITH_MUSIC = 2;
         String[] temp;
         Boolean screenOn;
         Button stopButton;
         AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+        FrameLayout musicFragment;
+        //count only or with music
+        int mode = 0;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.counting_basic);
@@ -74,11 +83,16 @@ public class counting extends Activity{
         pauseButton = (Button)findViewById(R.id.pauseButton);
         stopButton = (Button)findViewById(R.id.stopButton);
 
+
+
+
         sp = new SoundPool(1,AudioManager.STREAM_MUSIC, 0 );
         soundID = sp.load(this, R.raw.beep,1);
 
         Intent i = getIntent();
         if (i != null) {
+            mode = Integer.parseInt(i.getStringExtra("Mode"));
+            Log.e(TAG, "initiaion, mode= "+mode);
             e_time = i.getStringExtra("Exercise time");
             r_time = i.getStringExtra("Rest time");
             try{
@@ -122,7 +136,15 @@ public class counting extends Activity{
             length = exerciseTimeInSec;
             //Log.e(TAG, "exercise time: "+String.valueOf(exerciseTimeInSec)+ " /Rest time: "+String.valueOf(restTimeInSec));
         }
-
+        //TODO: changed here
+        if (mode == WITH_MUSIC){
+            Log.e(TAG, "With_Music");
+            mFragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = mFragmentManager
+                    .beginTransaction();
+            fragmentTransaction.add(R.id.musicFragment, new MusicPlayerFragment());
+            fragmentTransaction.commit();
+        }
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,7 +273,7 @@ public class counting extends Activity{
         //time in seconds
         int time = 1;
         double pauseTime = 0.1;
-        int repeat = 3;
+        //int repeat = 3;
 
         Vibrator vibrator = (Vibrator)getApplication().getSystemService(Service.VIBRATOR_SERVICE);
         if (isLong){
