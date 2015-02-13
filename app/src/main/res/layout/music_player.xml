@@ -8,19 +8,5 @@
         android:layout_height="0dp"
         android:layout_weight="5"
         android:id="@+id/song_list"></ListView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
 
-
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5">
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        </LinearLayout>
 </LinearLayout>

@@ -126,6 +126,7 @@ public class MusicPlayer extends Activity implements MediaController.MediaPlayer
             while (musicCursor.moveToNext());
         }
     }
+/*
     public void songPicked(View view){
         int songIndex = Integer.parseInt(view.getTag().toString());
         Log.e(TAG, "song #: " + view.getTag().toString());
@@ -139,7 +140,7 @@ public class MusicPlayer extends Activity implements MediaController.MediaPlayer
         }
         controller.show(0);
     }
-
+*/
     private void setController(){
         controller = new MusicController(this);
         controller.setPrevNextListeners(new View.OnClickListener() {

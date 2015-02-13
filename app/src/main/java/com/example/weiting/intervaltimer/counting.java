@@ -5,12 +5,17 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -105,10 +110,12 @@ public class Counting extends Activity{
             totalSet = set;
             set -= 1;
             notifyMode = i.getStringExtra("Notify");
-            screenOn = Boolean.getBoolean(i.getStringExtra("ScreenOn"));
-
+            screenOn = new Boolean(i.getStringExtra("ScreenOn"));
+            Log.e(TAG, "ScreenOn: "+screenOn);
+            Log.e(TAG, "ScreenOn passed: " +i.getStringExtra("ScreenOn"));
             if (screenOn){
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                Log.e(TAG, "ScreenOn()");
             }
 
             //restTime.setText(r_time);
@@ -138,12 +145,7 @@ public class Counting extends Activity{
         }
         //TODO: changed here
         if (mode == WITH_MUSIC){
-            Log.e(TAG, "With_Music");
-            mFragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = mFragmentManager
-                    .beginTransaction();
-            fragmentTransaction.add(R.id.musicFragment, new MusicPlayerFragment());
-            fragmentTransaction.commit();
+            showMusicPlayer();
         }
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,20 +191,34 @@ public class Counting extends Activity{
 
     void countDown(){
         TextView v;
+
+        int threshold;
+        //boolean highlight = false;
         if (mode == EXERCISE){
             v = exerciseTime;
+            threshold = Math.min(15, exerciseTimeInSec/6);
         }
-        else v = restTime;
+        else{
+            v = restTime;
+            threshold = Math.min(15, restTimeInSec/10);
+        }
 
-        //Log.e("countDown", String.valueOf(length));
+        //Log.e(TAG, "Threshold: " + threshold);
         int minutes = length/60;
         int seconds = length % 60;
         //parse into xx:xx String and update text
         String str = String.format("%02d:%02d", minutes,seconds);
         v.setText(str);
 
+        //if remaining time is less than threshold then highlight text
+        if (length < threshold){
+            //if only 15 secs to go, increase text size and change color
+            Log.e(TAG, "below threshold");
+            changeColor(v, true);
+        }
 
         if (length == 0){
+            changeColor(v, false);
             if (mode == REST) {
                 //if in rest mode
                 //if set = 0;
@@ -212,8 +228,6 @@ public class Counting extends Activity{
                     //handler.removeCallbacks(runnable);
                     //long buzz or alarm
                     buzzOrAlarm(notifyMode, Boolean.TRUE);
-
-
                 }
                 else{
                     //not finished yet
@@ -287,13 +301,14 @@ public class Counting extends Activity{
         int streamID;
 
         if (isLong) {
-            //repeat 3 times
-            streamID = sp.play(soundID, 1, 1, 1, 2, 1);
-            Log.e(TAG, "Alarm long "+ streamID+ " " + isLong);
+            //repeat 5 times
+            streamID = sp.play(soundID, 1, 1, 1, 4, 1);
+            //Log.e(TAG, "Alarm long "+ streamID+ " " + isLong);
         }
         else{
-            streamID = sp.play(soundID, 1.0F, 1.0F, 0, 0, 1.0F);
-            Log.e(TAG, "Alarm short" + streamID + " "+ isLong);
+            //repeat 2 times
+            streamID = sp.play(soundID, 1.0F, 1.0F, 0, 1, 1.0F);
+            //Log.e(TAG, "Alarm short" + streamID + " "+ isLong);
         }
 
 
@@ -321,8 +336,64 @@ public class Counting extends Activity{
         pause = Boolean.TRUE;
     }
 
-    void changeColor(){
+    void changeColor(TextView v, boolean highlight){
+        if (highlight) {
+            v.setTextAppearance(this, R.style.textCountHighlight);
+        }
+        else{
+            v.setTextAppearance(this, R.style.textCount);
+        }
 
+
+        //TODO change text size and color when current activity is about to end
     }
-    //TODO change text size and color when current activity is about to end
+
+    void showMusicPlayer(){
+        Log.e(TAG, "With_Music");
+        mFragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager
+                .beginTransaction();
+        fragmentTransaction.add(R.id.musicFragment, new MusicPlayerFragment());
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("Music");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.e(TAG, "item ID: "+id);
+        return super.onOptionsItemSelected(item);
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {//捕捉返回鍵
+        Log.e(TAG, "onKeyDown; KeyEvent: " + keyCode);
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+
+            confirmExit();//按返回鍵，則執行退出確認
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    void confirmExit(){
+        AlertDialog.Builder ad=new AlertDialog.Builder(this);
+        ad.setTitle("Exit");
+        ad.setMessage("Are you sure to leave current session?");
+        ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {//退出按鈕
+            public void onClick(DialogInterface dialog, int i) {
+                // TODO Auto-generated method stub
+                finish();//finish activity
+            }
+        });
+        ad.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int i) {
+                //do nothing
+            }
+        });
+        ad.show();//示對話框
+    }
 }

@@ -43,7 +43,7 @@
             android:ems="2"
             android:id="@+id/exerciseTimePicker1"
             android:editable="false"
-            android:text="0"
+            android:text="02"
             android:gravity="center_horizontal"
             style="@style/textMain"/>
 
@@ -60,7 +60,7 @@
             android:inputType="number"
             android:ems="2"
             android:id="@+id/exerciseTimePicker2"
-            android:text="03"
+            android:text="00"
             android:gravity="center_horizontal"
             style="@style/textMain"/>
 
@@ -94,7 +94,7 @@
             android:ems="2"
 
             android:gravity="center_horizontal"
-            android:text="0"
+            android:text="02"
             style="@style/textMain"/>
 
         <TextView
@@ -111,7 +111,7 @@
             android:inputType="number"
             android:ems="2"
             android:id="@+id/restTimePicker2"
-            android:text="03"
+            android:text="00"
             android:gravity="center_horizontal"
             style="@style/textMain"/>
 
@@ -137,7 +137,7 @@
         android:layout_below="@id/setView"
         android:ems="2"
         android:layout_alignLeft="@id/exerciseTimeView"
-        android:text="2"
+        android:text="5"
         android:gravity="center_horizontal"
         style="@style/textMain"/>
 

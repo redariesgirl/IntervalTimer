@@ -8,6 +8,10 @@
         <item name="android:textSize">60dp</item>
         <item name="android:textColor">#FFFACD</item>
     </style>
+    <style name="textCountHighlight">
+        <item name="android:textSize">70dp</item>
+        <item name="android:textColor">#00ff7f</item>
+    </style>
     <style name="textMain">
         <item name="android:textSize">25dp</item>
         <item name="android:textColor">#FFFACD</item>

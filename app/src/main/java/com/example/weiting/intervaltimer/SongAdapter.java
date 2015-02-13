@@ -34,7 +34,7 @@ public class SongAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = new ViewHolder();
         Song song = songs.get(position);
-        Log.e(TAG, song.getTitle() + " - " + song.getArtist());
+        //Log.e(TAG, song.getTitle() + " - " + song.getArtist());
 
         if (convertView == null){
             //if not inflate previously, create a new viewHolder
@@ -43,11 +43,11 @@ public class SongAdapter extends BaseAdapter {
             viewHolder.titleView = (TextView) convertView.findViewById(R.id.song_title_text);
             viewHolder.artistView = (TextView) convertView.findViewById(R.id.artist_text);
             convertView.setTag(viewHolder);
-            Log.e(TAG, "Created convertView");
+            //Log.e(TAG, "Created convertView");
         }
         else{
             viewHolder = (ViewHolder) convertView.getTag();
-            Log.e(TAG, "convertView already exists");
+            //Log.e(TAG, "convertView already exists");
         }
         viewHolder.artistView.setText(song.getArtist());
         viewHolder.titleView.setText(song.getTitle());

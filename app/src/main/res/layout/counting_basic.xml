@@ -44,6 +44,7 @@
         android:layout_below="@id/restTime"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/ButtonLL"
 
         android:gravity="center_horizontal">
         <Button
@@ -58,5 +59,12 @@
             android:id="@+id/stopButton"
             android:layout_marginLeft="20dp"
             android:text="Stop"/>
-        </LinearLayout>
+
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ButtonLL"
+        android:id="@+id/musicFragment"
+        android:layout_alignParentBottom="true"></FrameLayout>
 </RelativeLayout>

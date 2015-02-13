@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 public class MainActivity extends ActionBarActivity {
 
     static private final String TAG = "MainActivity";
+
     private EditText exerciseTimePicker1;
     private EditText exerciseTimePicker2;
     private EditText restTimePicker1;
@@ -28,8 +29,12 @@ public class MainActivity extends ActionBarActivity {
     //private Button vibrateButton;
     //private Button bothButton;
     private Button startButton;
+    private Button musicButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final int COUNT_ONLY = 1;
+        final int WITH_MUSIC = 2;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         exerciseTimePicker1 = (EditText)findViewById(R.id.exerciseTimePicker1);
@@ -45,7 +50,18 @@ public class MainActivity extends ActionBarActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCounting();
+                startCounting(COUNT_ONLY);
+            }
+        });
+        musicButton = (Button) findViewById(R.id.music);
+
+        //TODO onClickListener needs to be refined.
+        musicButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                //Intent i = new Intent(MainActivity.this, MusicPlayer.class);
+                //startActivity(i);
+                startCounting(WITH_MUSIC);
+                Log.e(TAG, "onClickListener WITH_MUSIC, mode: "+WITH_MUSIC);
             }
         });
         screenOnCB = (CheckBox)findViewById(R.id.screenOnCB);
@@ -75,14 +91,17 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void startCounting(){
-        Intent i = new Intent(getApplicationContext(), counting.class);
+    public void startCounting(int mode){
+        Intent i = new Intent(getApplicationContext(), Counting.class);
         i.putExtra("Exercise time",exerciseTimePicker1.getText().toString()+":"+exerciseTimePicker2.getText().toString());
         i.putExtra("Rest time",restTimePicker1.getText().toString()+":"+restTimePicker2.getText().toString());
         i.putExtra("Set", setPicker.getText().toString());
         i.putExtra("Notify", String.valueOf(notifyRadioGroup.getCheckedRadioButtonId()));
         i.putExtra("ScreenOn", String.valueOf(screenOnCB.isChecked()));
-        //Log.e(TAG, i.getStringExtra("notify"));
+        //Log.e(TAG, "ScreenOn" + screenOnCB.isChecked());
+        //Log.e(TAG, "ScreenOn passed: " +String.valueOf(screenOnCB.isChecked()) );
+        i.putExtra("Mode", String.valueOf(mode));
+        Log.e(TAG, "mode" + i.getStringExtra("Mode"));
         startActivity(i);
     }
 }

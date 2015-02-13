@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.MediaController;
@@ -42,9 +43,6 @@ public class MusicPlayerFragment extends Fragment implements MediaController.Med
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.music_player);
-
-
 
     }
 
@@ -65,20 +63,30 @@ public class MusicPlayerFragment extends Fragment implements MediaController.Med
             }
         });
 
-        SongAdapter songAdt = new SongAdapter(getActivity(), songList);
+        final SongAdapter songAdt = new SongAdapter(getActivity().getApplicationContext(), songList);
         songView.setAdapter(songAdt);
         setController();
+
+        songView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                songPicked(view);
+                Log.e(TAG, view.getTag().toString());
+            }
+        });
 
         return v;
     }
 
-    @Override
+        @Override
     public void onStart() {
         super.onStart();
         if (playIntent==null){
-            playIntent = new Intent(getActivity(), MusicService.class);
-            getActivity().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            getActivity().startService(playIntent);
+            playIntent = new Intent(getActivity().getApplicationContext(), MusicService.class);
+            getActivity().getApplicationContext().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            getActivity().getApplicationContext().startService(playIntent);
+
+            Log.e(TAG, "Service bound");
         }
     }
     public void onPause(){
@@ -94,8 +102,15 @@ public class MusicPlayerFragment extends Fragment implements MediaController.Med
     }
     public void onStop() {
         controller.hide();
+        Log.e(TAG, "onStop");
+        getActivity().getApplicationContext().unbindService(musicConnection);
+        Log.e(TAG, "onBindService");
         super.onStop();
+
     }
+
+
+
     //connect to the service
     private ServiceConnection musicConnection = new ServiceConnection(){
 
@@ -116,7 +131,7 @@ public class MusicPlayerFragment extends Fragment implements MediaController.Med
     };
 
     public void getSongList(){
-        ContentResolver musicResolver = getActivity().getContentResolver();
+        ContentResolver musicResolver = getActivity().getApplicationContext().getContentResolver();
         Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
 
@@ -252,6 +267,7 @@ public class MusicPlayerFragment extends Fragment implements MediaController.Med
         }
         controller.show(0);
     }
+
 }
 
 
